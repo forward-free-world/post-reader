@@ -9,6 +9,11 @@ import { PostQuery } from '../models/post-query';
   providedIn: 'root',
 })
 export class PostReader implements IPostReader {
+  static LinkRegex = new RegExp('\\[\\/\\/\\]:#\\s*\\(Link:\\s*(.+)\\)');
+  static MetaDataRegex = new RegExp(/^---\n[\s\S]+---/);
+  static TagsRegex = new RegExp('\\[\\/\\/\\]:#\\s*\\(Tags:\\s*(.+)\\)');
+  static TitleRegex = new RegExp('\\[\\/\\/\\]:#\\s*\\(Title:\\s*(.+)\\)');
+
   private readonly _posts$ = new BehaviorSubject<Post[]>([]);
 
   getTags(): Observable<string[]> {
@@ -47,26 +52,22 @@ export class PostReader implements IPostReader {
   }
 
   private parsePosts(rawPost: string): Post {
-    const metaDataRegex = new RegExp(/^---\n[\s\S]+---/),
-      titleRegex = new RegExp('\\[\\/\\/\\]:#\\s*\\(Title:\\s*(.+)\\)'),
-      tagsRegex = new RegExp('\\[\\/\\/\\]:#\\s*\\(Tags:\\s*(.+)\\)'),
-      linkRegex = new RegExp('\\[\\/\\/\\]:#\\s*\\(Link:\\s*(.+)\\)'),
-      [metaData] = metaDataRegex.exec(rawPost) ?? [null];
+    const [metaData] = PostReader.MetaDataRegex.exec(rawPost) ?? [null];
 
     let title: string | null = null,
       tags: string[] = [],
       link: string | null = null;
 
     if (metaData) {
-      title = (titleRegex.exec(metaData) ?? [null, null])[1];
+      title = (PostReader.TitleRegex.exec(metaData) ?? [null, null])[1];
 
-      const tagsMatch = tagsRegex.exec(metaData);
+      const tagsMatch = PostReader.TagsRegex.exec(metaData);
       if (tagsMatch)
         tags = tagsMatch[1]
           .split(',')
           .map((tagString) => tagString.replace('#', '').trim());
 
-      link = (linkRegex.exec(metaData) ?? [null, null])[1];
+      link = (PostReader.LinkRegex.exec(metaData) ?? [null, null])[1];
     }
 
     return {

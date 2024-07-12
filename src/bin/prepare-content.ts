@@ -1,6 +1,14 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
+/**
+ * @todo Share utilities across scraper and application
+ */
+class PostReader {
+  static LinkRegex = new RegExp('\\[\\/\\/\\]:#\\s*\\(Link:\\s*(.+)\\)');
+  static TitleRegex = new RegExp('\\[\\/\\/\\]:#\\s*\\(Title:\\s*(.+)\\)');
+}
+
 // Function to read all MD files from a directory
 async function readMdFilesFromDirectory(
   directoryPath: string
@@ -16,7 +24,28 @@ async function readMdFilesFromDirectory(
 
     for (const file of mdFiles) {
       const filePath = path.join(directoryPath, file);
-      const content = await fs.promises.readFile(filePath, 'utf8');
+      let content = await fs.promises.readFile(filePath, 'utf8');
+      let scraped: string | null = null;
+
+      const [, title] = PostReader.TitleRegex.exec(content) ?? [null, null],
+        [, link] = PostReader.LinkRegex.exec(content) ?? [null, null];
+      if (link) {
+        scraped = await fetch(link).then((response) => response.text());
+      }
+
+      if (scraped) {
+        const titleMetaRegex = new RegExp('\\<h1[\\s\\S]{0,}\\>(.+)\\<\\/h1>');
+
+        const [, titleMeta] = titleMetaRegex.exec(scraped ?? '') ?? [
+          null,
+          null,
+        ];
+
+        if (title && titleMeta) {
+          content = content.replace(title, titleMeta);
+        }
+      }
+
       mdContents.push(content);
     }
 
