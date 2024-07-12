@@ -1,0 +1,13 @@
+<ul id="filter-list" class="unstyled">
+  @for(tag of posts.getTags() | async; track tag) {
+  <li (click)="clickTag(tag)">
+    <app-filter [tag]="tag" [selected]="tagSelected(tag)"></app-filter>
+  </li>
+  }
+</ul>
+
+<ul id="post-list" class="unstyled">
+  @for(post of posts.getPosts(postQuery) | async; track post) {
+  <li><app-post [post]="post"></app-post></li>
+  }
+</ul>

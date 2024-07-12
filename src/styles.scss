@@ -1,0 +1,13 @@
+/* You can add global styles to this file, and also import other style files */
+ul.unstyled {
+    margin: 0;
+    list-style: none;
+    display: inline;
+    padding: 0;
+    li {
+        display: inline;
+        &:after {
+            content: ' '
+        }
+    }
+}
