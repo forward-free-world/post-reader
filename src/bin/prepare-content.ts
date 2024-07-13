@@ -1,13 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-
-/**
- * @todo Share utilities across scraper and application
- */
-class PostReader {
-  static LinkRegex = new RegExp('\\[\\/\\/\\]:#\\s*\\(Link:\\s*(.+)\\)');
-  static TitleRegex = new RegExp('\\[\\/\\/\\]:#\\s*\\(Title:\\s*(.+)\\)');
-}
+import { LinkRegex, TitleRegex } from '../utilities';
 
 // Function to read all MD files from a directory
 async function readMdFilesFromDirectory(directoryPath: string): Promise<string[]> {
@@ -24,7 +17,7 @@ async function readMdFilesFromDirectory(directoryPath: string): Promise<string[]
         continue;
       }
 
-      const [, link] = PostReader.LinkRegex.exec(markdown) ?? [null, null];
+      const [, link] = LinkRegex.exec(markdown) ?? [null, null];
       if (link) {
         const scraped = await fetch(link).then(response => response.text());
 
@@ -44,7 +37,7 @@ async function readMdFilesFromDirectory(directoryPath: string): Promise<string[]
 }
 
 function enrichWithScrapedData(markdown: string, scraped: string) {
-  const [, mdTitle] = PostReader.TitleRegex.exec(markdown) ?? [null, null],
+  const [, mdTitle] = TitleRegex.exec(markdown) ?? [null, null],
     scrapedTitleRegex = new RegExp('\\<h1[\\s\\S]{0,}\\>(.+)\\<\\/h1>'),
     [, scrapedTitle] = scrapedTitleRegex.exec(scraped ?? '') ?? [null, null];
 
