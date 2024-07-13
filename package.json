@@ -1,5 +1,5 @@
 {
-  "name": "palestine",
+  "name": "postreader",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:palestine": "node dist/palestine/server/server.mjs",
+    "serve:ssr:postreader": "node dist/postreader/server/server.mjs",
     "prepare-content": "tsc -p src/bin/tsconfig.json && node out/bin/prepare-content.js",
     "start-with-content": "npm run prepare-content && npm run start"
   },
