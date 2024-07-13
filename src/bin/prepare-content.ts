@@ -10,43 +10,30 @@ class PostReader {
 }
 
 // Function to read all MD files from a directory
-async function readMdFilesFromDirectory(
-  directoryPath: string
-): Promise<string[]> {
+async function readMdFilesFromDirectory(directoryPath: string): Promise<string[]> {
   try {
-    const files = await fs.promises.readdir(directoryPath);
-    const mdFiles = files.filter(
-      (file) =>
-        path.extname(file).toLowerCase() === '.md' ||
-        path.extname(file).toLowerCase() === '.md'
-    );
-    const mdContents: string[] = [];
+    const files = await fs.promises.readdir(directoryPath),
+      mdFiles = files.filter(file => path.extname(file).toLowerCase() === '.md'),
+      mdContents: string[] = [];
 
     for (const file of mdFiles) {
       const filePath = path.join(directoryPath, file);
-      let content = await fs.promises.readFile(filePath, 'utf8');
-      let scraped: string | null = null;
+      let markdown = await fs.promises.readFile(filePath, 'utf8');
 
-      const [, title] = PostReader.TitleRegex.exec(content) ?? [null, null],
-        [, link] = PostReader.LinkRegex.exec(content) ?? [null, null];
-      if (link) {
-        scraped = await fetch(link).then((response) => response.text());
+      if (!markdown) {
+        continue;
       }
 
-      if (scraped) {
-        const titleMetaRegex = new RegExp('\\<h1[\\s\\S]{0,}\\>(.+)\\<\\/h1>');
+      const [, link] = PostReader.LinkRegex.exec(markdown) ?? [null, null];
+      if (link) {
+        const scraped = await fetch(link).then(response => response.text());
 
-        const [, titleMeta] = titleMetaRegex.exec(scraped ?? '') ?? [
-          null,
-          null,
-        ];
-
-        if (title && titleMeta) {
-          content = content.replace(title, titleMeta);
+        if (scraped) {
+          markdown = enrichWithScrapedData(markdown, scraped);
         }
       }
 
-      mdContents.push(content);
+      mdContents.push(markdown);
     }
 
     return mdContents;
@@ -56,11 +43,19 @@ async function readMdFilesFromDirectory(
   }
 }
 
+function enrichWithScrapedData(markdown: string, scraped: string) {
+  const [, mdTitle] = PostReader.TitleRegex.exec(markdown) ?? [null, null],
+    scrapedTitleRegex = new RegExp('\\<h1[\\s\\S]{0,}\\>(.+)\\<\\/h1>'),
+    [, scrapedTitle] = scrapedTitleRegex.exec(scraped ?? '') ?? [null, null];
+
+  if (mdTitle && scrapedTitle) {
+    markdown = markdown.replace(mdTitle, scrapedTitle);
+  }
+  return markdown;
+}
+
 // Function to concatenate MD contents and write to a new file
-async function concatenateMdFiles(
-  inputDir: string,
-  outputFile: string
-): Promise<void> {
+async function concatenateMdFiles(inputDir: string, outputFile: string): Promise<void> {
   try {
     const mdContents = await readMdFilesFromDirectory(inputDir);
 

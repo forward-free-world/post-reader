@@ -6,7 +6,7 @@ import { Post } from '../models/post';
 import { PostQuery } from '../models/post-query';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class PostReader implements IPostReader {
   static LinkRegex = new RegExp('\\[\\/\\/\\]:#\\s*\\(Link:\\s*(.+)\\)');
@@ -18,10 +18,10 @@ export class PostReader implements IPostReader {
 
   getTags(): Observable<string[]> {
     return this.getPosts().pipe(
-      map((posts) =>
+      map(posts =>
         Array.from(
           posts.reduce((tags: Set<string>, post: Post) => {
-            post.tags.forEach((t) => tags.add(t));
+            post.tags.forEach(t => tags.add(t));
             return tags;
           }, new Set<string>())
         )
@@ -36,10 +36,10 @@ export class PostReader implements IPostReader {
     }
 
     return this._posts$.asObservable().pipe(
-      map((posts) => {
+      map(posts => {
         const { tags = [] } = postQuery ?? {};
         if (tags.length) {
-          posts = posts.filter((p) => p.tags.some((t) => tags.includes(t)));
+          posts = posts.filter(p => p.tags.some(t => tags.includes(t)));
         }
 
         return posts;
@@ -62,10 +62,7 @@ export class PostReader implements IPostReader {
       title = (PostReader.TitleRegex.exec(metaData) ?? [null, null])[1];
 
       const tagsMatch = PostReader.TagsRegex.exec(metaData);
-      if (tagsMatch)
-        tags = tagsMatch[1]
-          .split(',')
-          .map((tagString) => tagString.replace('#', '').trim());
+      if (tagsMatch) tags = tagsMatch[1].split(',').map(tagString => tagString.replace('#', '').trim());
 
       link = (PostReader.LinkRegex.exec(metaData) ?? [null, null])[1];
     }
@@ -75,7 +72,7 @@ export class PostReader implements IPostReader {
       link,
       tags,
       comment: rawPost.substring(metaData?.length ?? 0).trim(),
-      content: rawPost.substring(metaData?.length ?? 0).trim(),
+      content: rawPost.substring(metaData?.length ?? 0).trim()
     };
   }
 }
