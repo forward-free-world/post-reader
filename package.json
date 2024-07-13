@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:palestine": "node dist/palestine/server/server.mjs",
-    "prepare-content": "tsc -p src/bin/tsconfig.json && node out/prepare-content.js",
+    "prepare-content": "tsc -p src/bin/tsconfig.json && node out/bin/prepare-content.js",
     "start-with-content": "npm run prepare-content && npm run start"
   },
   "private": true,
