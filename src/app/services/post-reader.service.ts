@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable } from 'rxjs';
-import { LinkRegex, MetaDataRegex, TagsRegex, TitleRegex } from '../../utilities';
+import { ImageRegex, LinkRegex, MetaDataRegex, TagsRegex, TitleRegex } from '../../utilities';
 import * as post from '../../../out/all.md';
 import { IPostReader } from './interfaces/post-reader.interface';
 import { Post } from '../models/post';
@@ -52,7 +52,8 @@ export class PostReader implements IPostReader {
 
     let title: string | null = null,
       tags: string[] = [],
-      link: string | null = null;
+      link: string | null = null,
+      image: string | null = null;
 
     if (metaData) {
       title = (TitleRegex.exec(metaData) ?? [null, null])[1];
@@ -61,14 +62,16 @@ export class PostReader implements IPostReader {
       if (tagsMatch) tags = tagsMatch[1].split(',').map(tagString => tagString.replace('#', '').trim());
 
       link = (LinkRegex.exec(metaData) ?? [null, null])[1];
+      image = (ImageRegex.exec(metaData) ?? [null, null])[1];
     }
 
     return {
-      title,
+      comment: rawPost.substring(metaData?.length ?? 0).trim(),
+      content: rawPost.substring(metaData?.length ?? 0).trim(),
+      image,
       link,
       tags,
-      comment: rawPost.substring(metaData?.length ?? 0).trim(),
-      content: rawPost.substring(metaData?.length ?? 0).trim()
+      title
     };
   }
 }

@@ -8,12 +8,16 @@ import { Post } from '../models/post';
     <a [href]="post.link" target="_blank">{{ post.link }}</a>
     } @if(post.tags.length) {
     <div class="tags">
-      <span>Tags:&nbsp;</span> @for(tag of post.tags; track tag; let i = $index)
-      { @if(i) {, }
+      <span>Tags:&nbsp;</span> @for(tag of post.tags; track tag; let i = $index) { @if(i) {, }
       <span class="tag">#{{ tag }}</span>
       }
     </div>
     <article>
+      @if(post.image) {
+      <picture>
+        <img [src]="post.image" />
+      </picture>
+      }
       <h4>Content</h4>
       <p>{{ post.content }}</p>
     </article>
@@ -24,6 +28,7 @@ import { Post } from '../models/post';
         display: block;
         border: 1px dashed black;
         border-radius: 8px;
+        padding: 15px 30px 0;
         h3 {
           text-align: center;
         }
@@ -43,13 +48,17 @@ import { Post } from '../models/post';
           cursor: pointer;
         }
         article {
-          padding: 0 30px 30px;
+          padding: 0 0 30px;
+        }
+        img {
+          display: block;
+          width: 100%;
         }
       }
-    `,
+    `
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
+  standalone: true
 })
 export class PostComponent {
   @Input() post!: Post;
