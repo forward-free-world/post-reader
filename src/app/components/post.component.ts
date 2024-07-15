@@ -4,51 +4,51 @@ import { Post } from '../models/post';
 @Component({
   selector: 'app-post',
   template: `<h3>{{ post.title }}</h3>
-    @if(post.link) {
-    <a [href]="post.link" target="_blank">{{ post.link }}</a>
+    @if(post.image) {
+    <picture>
+      <img [src]="post.image" />
+    </picture>
+    } @if(post.link) {
+    <a [href]="post.link" class="red-color" target="_blank">{{ post.link }}</a>
     } @if(post.tags.length) {
     <div class="tags">
       <span>Tags:&nbsp;</span> @for(tag of post.tags; track tag; let i = $index) { @if(i) {, }
       <span class="tag">#{{ tag }}</span>
       }
     </div>
-    <article>
-      @if(post.image) {
-      <picture>
-        <img [src]="post.image" />
-      </picture>
-      }
-      <h4>Content</h4>
-      <p>{{ post.content }}</p>
-    </article>
+
+    <article>{{ post.content }}</article>
     } `,
   styles: [
     `
       :host {
         display: block;
-        border: 1px dashed black;
+        border: 1px dashed #ccc;
         border-radius: 8px;
-        padding: 15px 30px 0;
+        padding: 0 30px 30px;
         h3 {
           text-align: center;
         }
         a {
           display: block;
           text-align: center;
-          margin: 15px;
+          margin: 0 0 5px;
+          font-size: 0.85rem;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
         }
         .tags {
           margin-bottom: 25px;
+          font-size: 0.85arem;
           text-align: center;
         }
         .tag {
           cursor: pointer;
         }
-        article {
-          padding: 0 0 30px;
+        picture {
+          display: block;
+          margin-bottom: 15px;
         }
         img {
           display: block;

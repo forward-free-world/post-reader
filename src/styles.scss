@@ -1,13 +1,61 @@
 /* You can add global styles to this file, and also import other style files */
+
+// <uniquifier>: Use a unique and descriptive class name
+// <weight>: Use a value from 300 to 900
+
+body {
+  font-size: 0.9rem;
+  line-height: 1.2rem;
+}
+
+.figtree-400,
+p,
+span,
+article,
+ul {
+  font-family: "Figtree", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.uchen-regular,
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Uchen", serif;
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1.5em;
+}
+
+h3 {
+  font-size: 1.15rem;
+}
+
 ul.unstyled {
-    margin: 0;
-    list-style: none;
+  margin: 0;
+  list-style: none;
+  display: inline;
+  padding: 0;
+  li {
     display: inline;
-    padding: 0;
-    li {
-        display: inline;
-        &:after {
-            content: ' '
-        }
+    &:after {
+      content: " ";
     }
+  }
+}
+
+.red-color {
+  color: #ee2a35;
+}
+.red-bg {
+  background: #ee2a35;
+}
+.green-color {
+  color: #009736;
+}
+.green-bg {
+  background: #009736;
 }

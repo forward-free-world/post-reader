@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  HostBinding,
-  Input,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular/core';
 
 @Component({
   selector: 'app-filter',
@@ -11,9 +6,8 @@ import {
   styles: [
     `
       :host {
-        background: green;
         display: inline-block;
-        padding: 4px 15px 6px;
+        padding: 5px 15px;
         border-radius: 15px;
         color: #fff;
         line-height: 1em;
@@ -22,14 +16,17 @@ import {
           background: blue;
         }
       }
-    `,
+    `
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
+  standalone: true
 })
 export class FilterComponent {
   @Input()
   @HostBinding('class.selected')
   selected = false;
   @Input() tag!: string;
+
+  @HostBinding('class')
+  class = 'green-bg';
 }
