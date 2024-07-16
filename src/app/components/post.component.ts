@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
+import { MARKDOWN_CONVERTER } from '../tokens/markdown-converter.token';
 import { Post } from '../models/post';
-import { PostReader } from '../services/post-reader.service';
 
 @Component({
   selector: 'app-post',
@@ -64,13 +64,19 @@ import { PostReader } from '../services/post-reader.service';
 export class PostComponent {
   markdown!: string;
   private _post!: Post;
+  private readonly markdownConverter = inject(MARKDOWN_CONVERTER);
 
   @Input()
   set post(post: Post) {
-    this.markdown = PostReader.markdownToHtml(post.comment);
+    this.markdown = this.markdownToHtml(post.comment);
     this._post = post;
   }
   get post(): Post {
     return this._post;
+  }
+
+  private markdownToHtml(markdown: string): string {
+    const m = markdown.replace(/(#{1,4})(\s)/g, '$1## ');
+    return this.markdownConverter.makeHtml(m);
   }
 }
