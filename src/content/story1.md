@@ -6,4 +6,4 @@
 
 # Importing Custom file types
 
-Angular has good native support for json files imports. This article describes typescript and Angular configurations required to import custom file types.
+[Angular](https://angular.dev) has good native support for json files imports. This article describes typescript and Angular configurations required to import custom file types.

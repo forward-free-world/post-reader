@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Post } from '../models/post';
+const showdown = require('showdown');
 
 @Component({
   selector: 'app-post',
@@ -9,7 +10,7 @@ import { Post } from '../models/post';
       <img [src]="post.image" />
     </picture>
     } @if(post.link) {
-    <a [href]="post.link" class="red-color" target="_blank">{{ post.link }}</a>
+    <a [href]="post.link" target="_blank">{{ post.link }}</a>
     } @if(post.tags.length) {
     <div class="tags">
       <span>Tags:&nbsp;</span> @for(tag of post.tags; track tag; let i = $index) { @if(i) {, }
@@ -17,8 +18,9 @@ import { Post } from '../models/post';
       }
     </div>
 
-    <article>{{ post.content }}</article>
-    } `,
+    @if(markdown) {
+    <article [innerHTML]="markdown"></article>
+    } } `,
   styles: [
     `
       :host {
@@ -61,5 +63,16 @@ import { Post } from '../models/post';
   standalone: true
 })
 export class PostComponent {
-  @Input() post!: Post;
+  markdown!: string;
+  private _post!: Post;
+
+  @Input()
+  set post(post: Post) {
+    const markdown = post.comment.replace(/(#{1,4})(\s)/g, '$1## ');
+    this.markdown = new showdown.Converter().makeHtml(markdown);
+    this._post = post;
+  }
+  get post(): Post {
+    return this._post;
+  }
 }
