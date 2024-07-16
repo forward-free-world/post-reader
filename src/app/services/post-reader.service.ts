@@ -5,12 +5,20 @@ import * as post from '../../../out/all.md';
 import { IPostReader } from './interfaces/post-reader.interface';
 import { Post } from '../models/post';
 import { PostQuery } from '../models/post-query';
+import * as showdown from 'showdown';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PostReader implements IPostReader {
   private readonly _posts$ = new BehaviorSubject<Post[]>([]);
+
+  static showdown = new showdown.Converter();
+
+  static markdownToHtml(markdown: string): string {
+    const m = markdown.replace(/(#{1,4})(\s)/g, '$1## ');
+    return this.showdown.makeHtml(m);
+  }
 
   getTags(): Observable<string[]> {
     return this.getPosts().pipe(

@@ -13,7 +13,7 @@ import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular
         line-height: 1em;
         cursor: pointer;
         &.selected {
-          background: blue;
+          background: black;
         }
       }
     `

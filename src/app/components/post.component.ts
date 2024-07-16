@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Post } from '../models/post';
-const showdown = require('showdown');
+import { PostReader } from '../services/post-reader.service';
 
 @Component({
   selector: 'app-post',
@@ -25,9 +25,8 @@ const showdown = require('showdown');
     `
       :host {
         display: block;
-        border: 1px dashed #ccc;
-        border-radius: 8px;
-        padding: 0 30px 30px;
+        background: #fff;
+        padding: 15px 30px 25px;
         h3 {
           text-align: center;
         }
@@ -68,8 +67,7 @@ export class PostComponent {
 
   @Input()
   set post(post: Post) {
-    const markdown = post.comment.replace(/(#{1,4})(\s)/g, '$1## ');
-    this.markdown = new showdown.Converter().makeHtml(markdown);
+    this.markdown = PostReader.markdownToHtml(post.comment);
     this._post = post;
   }
   get post(): Post {
