@@ -1,9 +1,21 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import { LinkRegex, TitleRegex } from '../utilities';
+import * as crypto from 'crypto';
 const parseSrcset = require('parse-srcset');
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
-import { LinkRegex, TitleRegex } from '../utilities';
+const summariseApi = 'https://meaningcloud-summarization-v1.p.rapidapi.com/summarization-1.0?sentences=1&url=';
+
+type SummariesApiResponse = {
+  status: {
+    code: string; // "0"
+    credits: string; // "37"
+    msg: string; // "OK"
+    remaining_credits: string; //"696441"
+  };
+  summary: string;
+};
 
 // Function to read all MD files from a directory
 async function readMdFilesFromDirectory(directoryPath: string): Promise<string[]> {
@@ -27,6 +39,7 @@ async function readMdFilesFromDirectory(directoryPath: string): Promise<string[]
 
         if (scraped) {
           markdown = enrichWithScrapedData(markdown, document);
+          summarise(link);
         }
       }
 
@@ -38,6 +51,46 @@ async function readMdFilesFromDirectory(directoryPath: string): Promise<string[]
     console.error('Error reading directory:', err);
     return [];
   }
+}
+
+function summarise(link: string) {
+  const summariesFolder = './out/summaries';
+  let results: string[] = [];
+  try {
+    results = fs.readdirSync(summariesFolder);
+  } catch (e) {
+    if (e.code === 'ENOENT') {
+      fs.mkdirSync(summariesFolder);
+    }
+  }
+
+  const filename = crypto.createHash('md5').update(link).digest('hex');
+  if (results.includes(filename)) {
+    return;
+  }
+
+  fetch(summariseApi + encodeURIComponent(link), {
+    headers: {
+      Accept: 'application/json',
+      'x-rapidapi-key': 'WOULDNTYOULIKETOKNOW'
+    }
+  })
+    .then(response => response.json())
+    .then((response: SummariesApiResponse) => {
+      if (response?.status?.code === '0') {
+        console.info(`Caching ${link}`);
+        fs.writeFile(`${summariesFolder}/${filename}`, response.summary, e => {
+          if (e) {
+            console.error(e);
+          }
+        });
+      } else {
+        console.warn(`Could not fetch summary for ${link}`);
+      }
+    })
+    .catch(e => {
+      console.warn(`Could not fetch summary for ${link}, because ${e}`);
+    });
 }
 
 function enrichWithScrapedData(markdown: string, document: HTMLElement) {
