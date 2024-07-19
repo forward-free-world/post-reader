@@ -69,8 +69,8 @@ export class PostComponent implements AfterViewInit {
 
   private async getSummary(link: string): Promise<string> {
     const filename = btoa(link),
-      summary: { summary: string } = await import(`../../../out/summaries/${filename}.json`);
+      summary = await import(`../../../out/summaries/${filename}.txt`);
 
-    return summary.summary;
+    return summary.default;
   }
 }

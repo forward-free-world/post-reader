@@ -63,7 +63,7 @@ function summarise(link: string) {
     }
   }
 
-  const filename = btoa(link) + '.json';
+  const filename = btoa(link) + '.txt';
   if (results.includes(filename)) {
     return;
   }
@@ -78,7 +78,7 @@ function summarise(link: string) {
     .then((response: SummariesApiResponse) => {
       if (response?.status?.code === '0') {
         console.info(`Caching ${link}`);
-        fs.writeFile(`${summariesFolder}/${filename}`, JSON.stringify({ summary: response.summary }), e => {
+        fs.writeFile(`${summariesFolder}/${filename}`, response.summary, e => {
           if (e) {
             console.error(e);
           }

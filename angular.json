@@ -41,7 +41,8 @@
               "entry": "server.ts"
             },
             "loader": {
-              ".md": "text"
+              ".md": "text",
+              ".txt": "text"
             }
           },
           "configurations": {
