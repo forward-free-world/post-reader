@@ -1,7 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { LinkRegex, TitleRegex } from '../utilities';
-import * as crypto from 'crypto';
 import { environment } from './environment';
 const parseSrcset = require('parse-srcset');
 const jsdom = require('jsdom');
@@ -64,7 +63,7 @@ function summarise(link: string) {
     }
   }
 
-  const filename = crypto.createHash('md5').update(link).digest('hex');
+  const filename = btoa(link) + '.json';
   if (results.includes(filename)) {
     return;
   }
@@ -79,7 +78,7 @@ function summarise(link: string) {
     .then((response: SummariesApiResponse) => {
       if (response?.status?.code === '0') {
         console.info(`Caching ${link}`);
-        fs.writeFile(`${summariesFolder}/${filename}`, response.summary, e => {
+        fs.writeFile(`${summariesFolder}/${filename}`, JSON.stringify({ summary: response.summary }), e => {
           if (e) {
             console.error(e);
           }

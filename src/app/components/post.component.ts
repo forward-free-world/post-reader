@@ -1,4 +1,12 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, inject, Input } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  inject,
+  Input
+} from '@angular/core';
 import { MARKDOWN_CONVERTER } from '../tokens/markdown-converter.token';
 import { Post } from '../models/post';
 
@@ -20,56 +28,27 @@ import { Post } from '../models/post';
 
     @if(markdown) {
     <article [innerHTML]="markdown"></article>
-    } } `,
-  styles: [
-    `
-      :host {
-        display: block;
-        background: #fff;
-        padding: 15px 30px 25px;
-        h3 {
-          text-align: center;
-        }
-        a {
-          display: block;
-          text-align: center;
-          margin: 0 0 5px;
-          font-size: 0.85rem;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-        .tags {
-          margin-bottom: 25px;
-          font-size: 0.85arem;
-          text-align: center;
-        }
-        .tag {
-          cursor: pointer;
-        }
-        picture {
-          display: block;
-          margin-bottom: 15px;
-        }
-        img {
-          display: block;
-          width: 100%;
-        }
-      }
-    `
-  ],
+    } }
+    <summary>{{ summary }}</summary> `,
+  styleUrls: ['./post.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true
 })
 export class PostComponent implements AfterViewInit {
   markdown!: string;
+  summary!: string;
   private _post!: Post;
   private readonly elementRef = inject(ElementRef);
   private readonly markdownConverter = inject(MARKDOWN_CONVERTER);
+  private readonly spy = inject(ChangeDetectorRef);
 
   @Input()
   set post(post: Post) {
     this.markdown = this.markdownToHtml(post.comment);
+    this.getSummary(post.link ?? '').then(summary => {
+      this.summary = summary;
+      this.spy.detectChanges();
+    });
     this._post = post;
   }
   get post(): Post {
@@ -86,5 +65,12 @@ export class PostComponent implements AfterViewInit {
   private markdownToHtml(markdown: string): string {
     const m = markdown.replace(/(#{1,4})(\s)/g, '$1## ');
     return this.markdownConverter.makeHtml(m);
+  }
+
+  private async getSummary(link: string): Promise<string> {
+    const filename = btoa(link),
+      summary: { summary: string } = await import(`../../../out/summaries/${filename}.json`);
+
+    return summary.summary;
   }
 }
