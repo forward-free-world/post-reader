@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, inject, Input } from '@angular/core';
 import { MARKDOWN_CONVERTER } from '../tokens/markdown-converter.token';
 import { Post } from '../models/post';
 
@@ -61,9 +61,10 @@ import { Post } from '../models/post';
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true
 })
-export class PostComponent {
+export class PostComponent implements AfterViewInit {
   markdown!: string;
   private _post!: Post;
+  private readonly elementRef = inject(ElementRef);
   private readonly markdownConverter = inject(MARKDOWN_CONVERTER);
 
   @Input()
@@ -73,6 +74,13 @@ export class PostComponent {
   }
   get post(): Post {
     return this._post;
+  }
+
+  ngAfterViewInit() {
+    const anchors: HTMLAnchorElement[] = Array.from(this.elementRef.nativeElement.querySelectorAll('article a'));
+    anchors.forEach(a => {
+      a.target = '_blank';
+    });
   }
 
   private markdownToHtml(markdown: string): string {
