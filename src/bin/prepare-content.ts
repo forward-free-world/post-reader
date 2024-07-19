@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { LinkRegex, TitleRegex } from '../utilities';
 import * as crypto from 'crypto';
-import { environment } from 'environment';
+import { environment } from './environment';
 const parseSrcset = require('parse-srcset');
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
