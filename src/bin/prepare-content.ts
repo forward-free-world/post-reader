@@ -2,10 +2,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { LinkRegex, TitleRegex } from '../utilities';
 import * as crypto from 'crypto';
+import { environment } from 'environment';
 const parseSrcset = require('parse-srcset');
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
-const summariseApi = 'https://meaningcloud-summarization-v1.p.rapidapi.com/summarization-1.0?sentences=1&url=';
 
 type SummariesApiResponse = {
   status: {
@@ -69,10 +69,10 @@ function summarise(link: string) {
     return;
   }
 
-  fetch(summariseApi + encodeURIComponent(link), {
+  fetch(environment.summariseApi + encodeURIComponent(link), {
     headers: {
       Accept: 'application/json',
-      'x-rapidapi-key': 'WOULDNTYOULIKETOKNOW'
+      'x-rapidapi-key': environment.summariseApiKey
     }
   })
     .then(response => response.json())
