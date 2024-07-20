@@ -1,3 +1,5 @@
+<app-header [(toggled)]="toggled"></app-header>
+
 <ul id="filter-list" class="unstyled">
   @for(tag of posts.getTags() | async; track tag) {
   <li (click)="clickTag(tag)">

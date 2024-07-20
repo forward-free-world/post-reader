@@ -3,13 +3,21 @@
 // <uniquifier>: Use a unique and descriptive class name
 // <weight>: Use a value from 300 to 900
 
+html {
+  --site-width: 500px;
+  --green: #009736;
+  --red: #ee2a35;
+}
+
 body {
+  margin: 0;
   font-size: 0.9rem;
   line-height: 1.2rem;
   background: #f9f9f9;
 }
 
 .figtree-400,
+h1,
 p,
 span,
 article,
@@ -21,7 +29,6 @@ ul {
 }
 
 .uchen-regular,
-h1,
 h2,
 h3,
 h4 {
@@ -29,6 +36,13 @@ h4 {
   font-weight: 400;
   font-style: normal;
   line-height: 1.5em;
+}
+
+h1 {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 400;
+  letter-spacing: 5px;
 }
 
 h3 {
@@ -50,14 +64,14 @@ ul.unstyled {
 
 a,
 .red-color {
-  color: #ee2a35;
+  color: var(--red);
 }
 .red-bg {
-  background: #ee2a35;
+  background: var(--red);
 }
 .green-color {
-  color: #009736;
+  color: var(--green);
 }
 .green-bg {
-  background: #009736;
+  background: var(--green);
 }

@@ -2,14 +2,16 @@ import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FilterComponent } from './components/filter.component';
+import { HeaderComponent } from './components/header.component';
+import { POST_READER } from './tokens/post-reader.token';
 import { PostComponent } from './components/post.component';
 import { PostQuery } from './models/post-query';
-import { POST_READER } from './tokens/post-reader.token';
+import { Toggle } from './models/toggle';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, FilterComponent, CommonModule, PostComponent],
+  imports: [RouterOutlet, FilterComponent, CommonModule, PostComponent, HeaderComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -17,6 +19,7 @@ export class AppComponent {
   postQuery: PostQuery = {};
   posts = inject(POST_READER);
   spy = inject(ChangeDetectorRef);
+  toggled: Toggle = 'off';
 
   clickTag(tag: string) {
     const { tags = [] } = this.postQuery;
