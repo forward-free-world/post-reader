@@ -3,11 +3,11 @@ import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FilterComponent } from './components/filter.component';
 import { HeaderComponent } from './components/header.component';
+import { Content } from './models/content';
 import { POST_READER } from './tokens/post-reader.token';
-import { PostComponent } from './components/post.component';
+import { PostComponent } from './components/post/post.component';
 import { PostQuery } from './models/post-query';
 import { Toggle } from './models/toggle';
-import { Content } from './models/content';
 
 @Component({
   selector: 'app-root',
