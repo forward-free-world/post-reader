@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { LucideAngularModule } from 'lucide-angular';
 import { ToggleComponent } from './toggle.component';
 import { Toggle } from '../models/toggle';
 import { Content } from '../models/content';
@@ -7,7 +8,10 @@ import { Content } from '../models/content';
   selector: 'app-header',
   template: `<header>
     <h1>post reader</h1>
-    <app-toggle [toggled]="toggled" [caption]="caption" (toggledChange)="toggledChange.emit($event)"></app-toggle>
+    <div>
+      <app-toggle [toggled]="toggled" [caption]="caption" (toggledChange)="toggledChange.emit($event)"></app-toggle>
+      <lucide-icon name="info" [size]="22" [strokeWidth]="1"></lucide-icon>
+    </div>
   </header>`,
   styles: [
     `
@@ -20,16 +24,22 @@ import { Content } from '../models/content';
       header {
         display: flex;
         justify-content: space-between;
+        align-items: center;
         width: var(--site-width);
         margin: 0 auto;
       }
+      div {
+        display: flex;
+        align-items: center;
+      }
       app-toggle {
-        width: 94px;
+        width: 60px;
+        margin-right: 12px;
       }
     `
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ToggleComponent],
+  imports: [ToggleComponent, LucideAngularModule],
   standalone: true
 })
 export class HeaderComponent {
@@ -37,5 +47,5 @@ export class HeaderComponent {
   @Output() toggledChange = new EventEmitter<Toggle>();
 
   @Input()
-  caption!: Content;
+  caption!: string;
 }

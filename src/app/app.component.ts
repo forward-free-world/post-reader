@@ -17,7 +17,7 @@ import { Content } from './models/content';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  content: Content = 'machine';
+  content: Content = 'human';
   postQuery: PostQuery = {};
   posts = inject(POST_READER);
   spy = inject(ChangeDetectorRef);
@@ -51,13 +51,13 @@ export class AppComponent {
     this.toggled = toggle;
     switch (toggle) {
       case 'off':
-        this.content = 'machine';
+        this.content = 'human';
         break;
       case 'blend':
         this.content = 'both';
         break;
       case 'on':
-        this.content = 'human';
+        this.content = 'machine';
         break;
     }
   }

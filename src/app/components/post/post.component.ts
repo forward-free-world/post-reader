@@ -7,32 +7,17 @@ import {
   inject,
   Input
 } from '@angular/core';
-import { MARKDOWN_CONVERTER } from '../tokens/markdown-converter.token';
-import { Post } from '../models/post';
-import { Content } from '../models/content';
+import { LucideAngularModule } from 'lucide-angular';
+
+import { Content } from '../../models/content';
+import { MARKDOWN_CONVERTER } from '../../tokens/markdown-converter.token';
+import { Post } from '../../models/post';
 
 @Component({
   selector: 'app-post',
-  template: `<h3>{{ post.title }}</h3>
-    @if(post.image) {
-    <picture>
-      <img [src]="post.image" />
-    </picture>
-    } @if(post.link) {
-    <a [href]="post.link" target="_blank">{{ post.link }}</a>
-    } @if(post.tags.length) {
-    <div class="tags">
-      <span>Tags:&nbsp;</span> @for(tag of post.tags; track tag; let i = $index) { @if(i) {, }
-      <span class="tag">#{{ tag }}</span>
-      }
-    </div>
-
-    @if(markdown && ['both', 'human'].includes(content)) {
-    <article [innerHTML]="markdown"></article>
-    } } @if(['both', 'machine'].includes(content)) {
-    <summary>{{ summary }}</summary>
-    }`,
+  templateUrl: './post.component.html',
   styleUrls: ['./post.component.scss'],
+  imports: [LucideAngularModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true
 })

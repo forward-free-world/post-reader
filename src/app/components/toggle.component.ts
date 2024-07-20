@@ -72,13 +72,13 @@ export class ToggleComponent {
   @HostListener('click') clicked() {
     switch (this.toggled) {
       case 'off':
-        this.toggled = 'blend';
-        break;
-      case 'blend':
         this.toggled = 'on';
         break;
-      case 'on':
+      case 'blend':
         this.toggled = 'off';
+        break;
+      case 'on':
+        this.toggled = 'blend';
         break;
     }
     this.toggledChange.emit(this.toggled);

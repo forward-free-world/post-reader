@@ -1,4 +1,8 @@
-<app-header [toggled]="toggled" (toggledChange)="updateContent($event)" [caption]="content"></app-header>
+<app-header
+  [toggled]="toggled"
+  (toggledChange)="updateContent($event)"
+  [caption]="content === 'both' ? 'ai+' : 'ai'"
+></app-header>
 
 <ul id="filter-list" class="unstyled">
   @for(tag of posts.getTags() | async; track tag) {
