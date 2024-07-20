@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { MARKDOWN_CONVERTER } from '../tokens/markdown-converter.token';
 import { Post } from '../models/post';
+import { Content } from '../models/content';
 
 @Component({
   selector: 'app-post',
@@ -26,15 +27,18 @@ import { Post } from '../models/post';
       }
     </div>
 
-    @if(markdown) {
+    @if(markdown && ['both', 'human'].includes(content)) {
     <article [innerHTML]="markdown"></article>
-    } }
-    <summary>{{ summary }}</summary> `,
+    } } @if(['both', 'machine'].includes(content)) {
+    <summary>{{ summary }}</summary>
+    }`,
   styleUrls: ['./post.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true
 })
 export class PostComponent implements AfterViewInit {
+  @Input() content!: Content;
+
   markdown!: string;
   summary!: string;
   private _post!: Post;

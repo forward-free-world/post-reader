@@ -12,34 +12,48 @@ import { Toggle } from '../models/toggle';
 
 @Component({
   selector: 'app-toggle',
-  template: `<span></span>`,
+  template: `<div [ngClass]="toggled"><span></span></div>
+    @if (caption) { <span>{{ caption }}</span> }`,
   styles: [
     `
       :host {
+        display: flex;
+      }
+
+      div {
         display: block;
-        background: var(--green);
+        background: #000;
         width: 30px;
+        height: 15px;
         border-radius: 10px;
         padding: 2px;
         cursor: pointer;
+        transition: background 0.15s;
         &.blend {
+          background: var(--green);
           span {
-            margin: 0 auto;
+            left: 5px;
           }
         }
         &.on {
+          background: var(--green);
           span {
-            margin-left: auto;
+            left: 10px;
           }
         }
-      }
-
-      span {
-        display: block;
-        height: 100%;
-        width: 20px;
-        border-radius: 7px;
-        background: #fff;
+        span {
+          display: block;
+          position: relative;
+          height: 100%;
+          width: 20px;
+          border-radius: 7px;
+          background: #fff;
+          transition: left 0.25s;
+          left: 0;
+        }
+        + span {
+          margin-left: 5px;
+        }
       }
     `
   ],
@@ -48,7 +62,8 @@ import { Toggle } from '../models/toggle';
   standalone: true
 })
 export class ToggleComponent {
-  @HostBinding('class')
+  @Input() caption!: string;
+
   @Input()
   toggled: Toggle = 'off';
 

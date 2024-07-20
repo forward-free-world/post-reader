@@ -1,4 +1,4 @@
-<app-header [(toggled)]="toggled"></app-header>
+<app-header [toggled]="toggled" (toggledChange)="updateContent($event)" [caption]="content"></app-header>
 
 <ul id="filter-list" class="unstyled">
   @for(tag of posts.getTags() | async; track tag) {
@@ -10,6 +10,6 @@
 
 <ul id="post-list" class="unstyled">
   @for(post of posts.getPosts(postQuery) | async; track post) {
-  <li><app-post [post]="post"></app-post></li>
+  <li><app-post [post]="post" [content]="content"></app-post></li>
   }
 </ul>

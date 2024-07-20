@@ -7,6 +7,7 @@ import { POST_READER } from './tokens/post-reader.token';
 import { PostComponent } from './components/post.component';
 import { PostQuery } from './models/post-query';
 import { Toggle } from './models/toggle';
+import { Content } from './models/content';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +17,7 @@ import { Toggle } from './models/toggle';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
+  content: Content = 'machine';
   postQuery: PostQuery = {};
   posts = inject(POST_READER);
   spy = inject(ChangeDetectorRef);
@@ -43,5 +45,20 @@ export class AppComponent {
 
   tagSelected(tag: string): boolean {
     return this.postQuery.tags?.includes(tag) ?? false;
+  }
+
+  updateContent(toggle: Toggle) {
+    this.toggled = toggle;
+    switch (toggle) {
+      case 'off':
+        this.content = 'machine';
+        break;
+      case 'blend':
+        this.content = 'both';
+        break;
+      case 'on':
+        this.content = 'human';
+        break;
+    }
   }
 }
