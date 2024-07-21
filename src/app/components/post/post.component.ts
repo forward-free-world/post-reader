@@ -4,8 +4,10 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  EventEmitter,
   inject,
-  Input
+  Input,
+  Output
 } from '@angular/core';
 import { LucideAngularModule } from 'lucide-angular';
 
@@ -23,6 +25,7 @@ import { Post } from '../../models/post';
 })
 export class PostComponent implements AfterViewInit {
   @Input() content!: Content;
+  @Output() tagSelected = new EventEmitter<string>();
 
   markdown!: string;
   summary!: string;
@@ -52,7 +55,7 @@ export class PostComponent implements AfterViewInit {
   }
 
   private markdownToHtml(markdown: string): string {
-    const m = markdown.replace(/(#{1,4})(\s)/g, '$1## ');
+    const m = markdown.replace(/(#{1,4})(\s)/g, '$1### ');
     return this.markdownConverter.makeHtml(m);
   }
 

@@ -7,10 +7,12 @@ import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular
     `
       :host {
         display: inline-block;
-        padding: 5px 15px;
+        padding: 4px 12px 5px;
         border-radius: 15px;
         color: #fff;
         line-height: 1em;
+        font-size: 0.85rem;
+        font-weight: 500;
         cursor: pointer;
         &.selected {
           background: black;

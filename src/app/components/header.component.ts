@@ -13,8 +13,10 @@ import { Toggle } from '../models/toggle';
         name="info"
         [size]="22"
         [strokeWidth]="1"
-        data-tooltip="For each hyperlink submitted by a contributer a summary or description can be included.
-For articles with no submission, we will create one with the assistance of generative AI."
+        data-tooltip="For each hyperlink submitted by a contributor, inlcuding a summary is optional. For hyperlinked articles submitted without a summary, we will create one with the assistance of generative AI (indicated).
+
+&middot; Toggle once to display AI summaries for all
+&middot; Toggle twice to display user-submitted & AI summaries"
       ></lucide-icon>
     </div>
   </header>`,
@@ -38,7 +40,7 @@ For articles with no submission, we will create one with the assistance of gener
       }
       app-toggle {
         width: 60px;
-        margin-right: 12px;
+        margin-right: 6px;
       }
     `
   ],

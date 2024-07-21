@@ -14,6 +14,6 @@
 
 <ul id="post-list" class="unstyled">
   @for(post of posts.getPosts(postQuery) | async; track post) {
-  <li><app-post [post]="post" [content]="content"></app-post></li>
+  <li><app-post [post]="post" [content]="content" (tagSelected)="clickTag($event)"></app-post></li>
   }
 </ul>
