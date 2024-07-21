@@ -15,6 +15,7 @@ import { Content } from '../../models/content';
 import { MARKDOWN_CONVERTER } from '../../tokens/markdown-converter.token';
 import { Post } from '../../models/post';
 import { CommonModule } from '@angular/common';
+import { TldrDTO } from '../../../bin/models/tldr-dto';
 
 @Component({
   selector: 'app-post',
@@ -38,8 +39,9 @@ export class PostComponent implements AfterViewInit {
   @Input()
   set post(post: Post) {
     this.markdown = this.markdownToHtml(post.comment);
-    this.getSummary(post.link ?? '').then(summary => {
-      this.summary = summary;
+    this.getSummary(post.link ?? '').then(tldr => {
+      const { summary } = tldr;
+      this.summary = summary?.length ? summary[0] : '';
       this.spy.detectChanges();
     });
     this._post = post;
@@ -60,9 +62,9 @@ export class PostComponent implements AfterViewInit {
     return this.markdownConverter.makeHtml(m);
   }
 
-  private async getSummary(link: string): Promise<string> {
+  private async getSummary(link: string): Promise<TldrDTO> {
     const filename = btoa(link),
-      summary = await import(`../../../../out/summaries/${filename}.txt`);
+      summary = await import(`../../../../out/summaries/${filename}.json`);
 
     return summary.default;
   }
