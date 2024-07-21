@@ -1,20 +1,11 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { LinkRegex, TitleRegex } from '../utilities';
+import { TldrDTO } from './models/tldr-dto';
 import { environment } from './environment';
 const parseSrcset = require('parse-srcset');
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
-
-type SummariesApiResponse = {
-  status: {
-    code: string; // "0"
-    credits: string; // "37"
-    msg: string; // "OK"
-    remaining_credits: string; //"696441"
-  };
-  summary: string;
-};
 
 // Function to read all MD files from a directory
 async function readMdFilesFromDirectory(directoryPath: string): Promise<string[]> {
@@ -52,7 +43,7 @@ async function readMdFilesFromDirectory(directoryPath: string): Promise<string[]
   }
 }
 
-function summarise(link: string) {
+function summarise(url: string) {
   const summariesFolder = './out/summaries';
   let results: string[] = [];
   try {
@@ -63,32 +54,38 @@ function summarise(link: string) {
     }
   }
 
-  const filename = btoa(link) + '.txt';
+  const filename = btoa(url) + '.txt';
   if (results.includes(filename)) {
     return;
   }
 
-  fetch(environment.summariseApi + encodeURIComponent(link), {
+  fetch(environment.summariseApi, {
+    body: JSON.stringify({
+      url,
+      min_length: 100,
+      max_length: 300,
+      is_detailed: false
+    }),
     headers: {
       Accept: 'application/json',
       'x-rapidapi-key': environment.summariseApiKey
-    }
+    },
+    method: 'POST'
   })
     .then(response => response.json())
-    .then((response: SummariesApiResponse) => {
-      if (response?.status?.code === '0') {
-        console.info(`Caching ${link}`);
-        fs.writeFile(`${summariesFolder}/${filename}`, response.summary, e => {
+    .then((response: TldrDTO) => {
+      console.info(`Caching ${url}`);
+      const { summary } = response;
+      if (summary?.length) {
+        fs.writeFile(`${summariesFolder}/${filename}`, summary[0] ?? '', e => {
           if (e) {
             console.error(e);
           }
         });
-      } else {
-        console.warn(`Could not fetch summary for ${link}`);
       }
     })
     .catch(e => {
-      console.warn(`Could not fetch summary for ${link}, because ${e}`);
+      console.warn(`Could not fetch summary for ${url}, because ${e}`);
     });
 }
 
