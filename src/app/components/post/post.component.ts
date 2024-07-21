@@ -9,17 +9,18 @@ import {
   Input,
   Output
 } from '@angular/core';
-import { LucideAngularModule } from 'lucide-angular';
 
+import { AiComponent } from '../ai.component';
 import { Content } from '../../models/content';
 import { MARKDOWN_CONVERTER } from '../../tokens/markdown-converter.token';
 import { Post } from '../../models/post';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-post',
   templateUrl: './post.component.html',
   styleUrls: ['./post.component.scss'],
-  imports: [LucideAngularModule],
+  imports: [CommonModule, AiComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true
 })
