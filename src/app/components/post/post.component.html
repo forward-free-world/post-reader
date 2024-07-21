@@ -1,9 +1,10 @@
-<h3>{{ post.title }}</h3>
 @if(post.image) {
 <picture>
   <img [src]="post.image" />
 </picture>
 }
+
+<h3>{{ post.title }}</h3>
 
 <div class="meta">
   @if(post.link) {
