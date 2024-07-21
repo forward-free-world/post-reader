@@ -1,0 +1,13 @@
+---
+[//]:# (Title: My title)
+[//]:# (Tags: #my, #tags)
+[//]:# (Link: https://my-example.com)
+---
+
+# My example markdown
+
+Write any legitimate markdown to include a summary of the article on the website. Please note markdown header tags are manipulated to display appropriately on the website.
+
+- `#` will render as H4's.
+- `##` will render as H5's.
+- `###` to `######` will render as H6's.
