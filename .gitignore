@@ -42,3 +42,7 @@ testem.log
 .DS_Store
 Thumbs.db
 src/bin/environment.ts
+terraform/.terraform.tfstate.lock.info
+terraform/.terraform/**/*
+terraform/terraform.tfstate.backup
+terraform/terraform.tfstate
