@@ -140,6 +140,13 @@ resource "aws_cloudfront_distribution" "post_reader_s3_hosting_distribution" {
 
   web_acl_id = aws_waf_web_acl.post_reader_s3_waf_acl.id
 
+  custom_error_response {
+    error_caching_min_ttl = 300
+    error_code            = 404
+    response_code         = 200
+    response_page_path    = "/index.html"
+  }
+
   tags = {
     Environment = "production"
   }
