@@ -1,3 +1,47 @@
+resource "aws_waf_ipset" "post_reader_s3_waf_ipset" {
+  name = "postReaderIPSet"
+
+  ip_set_descriptors {
+    type  = "IPV4"
+    value = "127.0.0.1/32"
+  }
+}
+
+resource "aws_waf_rule" "post_reader_s3_waf_rule" {
+  depends_on  = [aws_waf_ipset.post_reader_s3_waf_ipset]
+  name        = "postReaderWAFRule"
+  metric_name = "postReaderWAFRule"
+
+  predicates {
+    data_id = aws_waf_ipset.post_reader_s3_waf_ipset.id
+    negated = false
+    type    = "IPMatch"
+  }
+}
+
+resource "aws_waf_web_acl" "post_reader_s3_waf_acl" {
+  depends_on = [
+    aws_waf_ipset.post_reader_s3_waf_ipset,
+    aws_waf_rule.post_reader_s3_waf_rule,
+  ]
+  name        = "postReaderWebACL"
+  metric_name = "postReaderWebACL"
+
+  default_action {
+    type = "BLOCK"
+  }
+
+  rules {
+    action {
+      type = "ALLOW"
+    }
+
+    priority = 1
+    rule_id  = aws_waf_rule.post_reader_s3_waf_rule.id
+    type     = "REGULAR"
+  }
+}
+
 resource "aws_s3_bucket" "post_reader_s3_hosting" {
   bucket = var.bucket_name
 
@@ -46,6 +90,7 @@ data "aws_iam_policy_document" "data_post_reader_s3_cf_policy" {
 }
 
 resource "aws_cloudfront_distribution" "post_reader_s3_hosting_distribution" {
+  depends_on = [aws_waf_web_acl.post_reader_s3_waf_acl]
   origin {
     domain_name = aws_s3_bucket.post_reader_s3_hosting.bucket_regional_domain_name
     origin_id   = var.bucket_origin_id
@@ -86,6 +131,8 @@ resource "aws_cloudfront_distribution" "post_reader_s3_hosting_distribution" {
       locations        = []
     }
   }
+
+  web_acl_id = aws_waf_web_acl.post_reader_s3_waf_acl.id
 
   tags = {
     Environment = "production"
