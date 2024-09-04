@@ -1,5 +1,5 @@
 resource "aws_waf_ipset" "post_reader_s3_waf_ipset" {
-  name = "postReaderIPSet"
+  name = var.waf_ipset_name
 
   ip_set_descriptors {
     type  = "IPV4"
@@ -9,8 +9,8 @@ resource "aws_waf_ipset" "post_reader_s3_waf_ipset" {
 
 resource "aws_waf_rule" "post_reader_s3_waf_rule" {
   depends_on  = [aws_waf_ipset.post_reader_s3_waf_ipset]
-  name        = "postReaderWAFRule"
-  metric_name = "postReaderWAFRule"
+  name        = var.waf_rule_name
+  metric_name = var.waf_rule_name
 
   predicates {
     data_id = aws_waf_ipset.post_reader_s3_waf_ipset.id
@@ -24,8 +24,8 @@ resource "aws_waf_web_acl" "post_reader_s3_waf_acl" {
     aws_waf_ipset.post_reader_s3_waf_ipset,
     aws_waf_rule.post_reader_s3_waf_rule,
   ]
-  name        = "postReaderWebACL"
-  metric_name = "postReaderWebACL"
+  name        = var.waf_web_acl_name
+  metric_name = var.waf_web_acl_name
 
   default_action {
     type = "BLOCK"
@@ -67,11 +67,13 @@ resource "aws_cloudfront_origin_access_identity" "post_reader_s3_hosting_oai" {
 }
 
 resource "aws_s3_bucket_policy" "post_reader_s3_cf_policy" {
-  bucket = aws_s3_bucket.post_reader_s3_hosting.id
-  policy = data.aws_iam_policy_document.data_post_reader_s3_cf_policy.json
+  depends_on = [aws_s3_bucket.post_reader_s3_hosting, data.aws_iam_policy_document.data_post_reader_s3_cf_policy]
+  bucket     = aws_s3_bucket.post_reader_s3_hosting.id
+  policy     = data.aws_iam_policy_document.data_post_reader_s3_cf_policy.json
 }
 
 data "aws_iam_policy_document" "data_post_reader_s3_cf_policy" {
+  depends_on = [aws_cloudfront_origin_access_identity.post_reader_s3_hosting_oai, aws_s3_bucket.post_reader_s3_hosting]
   statement {
     sid = "1"
     principals {
@@ -90,7 +92,11 @@ data "aws_iam_policy_document" "data_post_reader_s3_cf_policy" {
 }
 
 resource "aws_cloudfront_distribution" "post_reader_s3_hosting_distribution" {
-  depends_on = [aws_waf_web_acl.post_reader_s3_waf_acl]
+  depends_on = [
+    aws_waf_web_acl.post_reader_s3_waf_acl,
+    aws_s3_bucket.post_reader_s3_hosting,
+    aws_cloudfront_origin_access_identity.post_reader_s3_hosting_oai
+  ]
   origin {
     domain_name = aws_s3_bucket.post_reader_s3_hosting.bucket_regional_domain_name
     origin_id   = var.bucket_origin_id
