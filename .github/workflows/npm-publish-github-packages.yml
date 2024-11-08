@@ -27,6 +27,11 @@ jobs:
         SUMMARISEAPI: ${{ secrets.SUMMARISEAPI }}
         SUMMARISEAPIKEY: ${{ secrets.SUMMARISEAPIKEY }}
 
+    - name: Set Git identity
+      run: |
+        git config --global user.email "ardinent@gmail.com"
+        git config --global user.name "Theunis Cilliers"
+
     - name: Deploy to GitHub Pages
       run: |
         npx gh-pages -d dist/postreader/browser/
