@@ -22,7 +22,7 @@ import { Toggle } from '../models/toggle';
 
       div {
         display: block;
-        background: var(--green);
+        background: #000;
         width: 30px;
         height: 15px;
         border-radius: 10px;
@@ -30,13 +30,13 @@ import { Toggle } from '../models/toggle';
         cursor: pointer;
         transition: background 0.15s;
         &.blend {
-          background: #000;
+          background: var(--green);
           span {
             left: 5px;
           }
         }
         &.on {
-          background: #000;
+          background: var(--green);
           span {
             left: 10px;
           }

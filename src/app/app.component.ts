@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, HostBinding, HostListener, inject, PLATFORM_ID } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FilterComponent } from './components/filter.component';
 import { HeaderComponent } from './components/header.component';
 import { Content } from './models/content';
@@ -22,6 +22,19 @@ export class AppComponent {
   posts = inject(POST_READER);
   spy = inject(ChangeDetectorRef);
   toggled: Toggle = 'off';
+
+  @HostBinding('class.scrolled') scrolled = false;
+
+  @HostListener('window:scroll', ['$event'])
+  onWindowScroll() {
+    let scrollPosition = 0;
+    if (isPlatformBrowser(this.platformId)) {
+      scrollPosition = window.scrollY || document.documentElement.scrollTop;
+    }
+    this.scrolled = scrollPosition > 40;
+  }
+
+  private platformId = inject(PLATFORM_ID);
 
   clickTag(tag: string) {
     const { tags = [] } = this.postQuery;
@@ -59,6 +72,15 @@ export class AppComponent {
       case 'on':
         this.content = 'machine';
         break;
+    }
+  }
+
+  scrollToTop() {
+    if (isPlatformBrowser(this.platformId)) {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
     }
   }
 }
