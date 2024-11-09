@@ -2,10 +2,11 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { LinkRegex, TitleRegex } from '../utilities';
 import { TldrDTO } from './models/tldr-dto';
-import { environment } from './environment';
+import { env } from 'process';
 const parseSrcset = require('parse-srcset');
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
+require('dotenv').config();
 
 // Function to read all MD files from a directory
 async function readMdFilesFromDirectory(directoryPath: string): Promise<string[]> {
@@ -59,7 +60,7 @@ function summarise(url: string) {
     return;
   }
 
-  fetch(environment.summariseApi, {
+  fetch(env.SUMMARISEAPI as string, {
     body: JSON.stringify({
       url,
       min_length: 100,
@@ -68,7 +69,7 @@ function summarise(url: string) {
     }),
     headers: {
       Accept: 'application/json',
-      'x-rapidapi-key': environment.summariseApiKey
+      'x-rapidapi-key': env.SUMMARISEAPIKEY as string
     },
     method: 'POST'
   })
