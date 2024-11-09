@@ -10,7 +10,7 @@
     "serve:ssr:postreader": "node dist/postreader/server/server.mjs",
     "prepare-content": "tsc -p src/bin/tsconfig.json && node out/bin/prepare-content.js",
     "start-with-content": "npm run prepare-content && npm run start",
-    "build-with-content": "npm run prepare-content && npm run build"
+    "build-with-content": "npm run prepare-content && ng build --base-href /post-reader/"
   },
   "private": true,
   "dependencies": {
