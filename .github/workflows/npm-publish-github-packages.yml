@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -29,13 +29,21 @@ jobs:
         SUMMARISEAPI: ${{ secrets.SUMMARISEAPI }}
         SUMMARISEAPIKEY: ${{ secrets.SUMMARISEAPIKEY }}
 
-    - name: Set Git identity
-      run: |
-        git config --global user.email "ardinent@gmail.com"
-        git config --global user.name "Theunis Cilliers"
+    - name: Update pages artifact
+      uses: actions/upload-pages-artifact@v1
+      with:
+        path: dist/postreader/browser/
 
+  deploy:
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${\{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
     - name: Deploy to GitHub Pages
-      run: |
-        npx gh-pages -d dist/postreader/browser/
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      id: deployment
+      uses: actions/deploy-pages@v1
