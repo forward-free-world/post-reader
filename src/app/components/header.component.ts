@@ -1,12 +1,13 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { LucideAngularModule } from 'lucide-angular';
 import { ToggleComponent } from './toggle.component';
 import { Toggle } from '../models/toggle';
+import { SITE_TITLE } from '../tokens/site-title.token';
 
 @Component({
   selector: 'app-header',
   template: `<header>
-    <h1>post reader</h1>
+    <h1>{{ siteTitle }}</h1>
     <div>
       <app-toggle [toggled]="toggled" [caption]="caption" (toggledChange)="toggledChange.emit($event)"></app-toggle>
       <lucide-icon
@@ -49,9 +50,9 @@ import { Toggle } from '../models/toggle';
   standalone: true
 })
 export class HeaderComponent {
+  readonly siteTitle = inject(SITE_TITLE);
+
+  @Input() caption!: string;
   @Input() toggled: Toggle = 'off';
   @Output() toggledChange = new EventEmitter<Toggle>();
-
-  @Input()
-  caption!: string;
 }
