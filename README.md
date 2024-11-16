@@ -62,7 +62,15 @@ When setting up your own build and continuous integration pipelines, please note
 
 ### Fork the application
 
+1. Go to [rapidapi.com](https://rapidapi.com) and create an account
+1. Go to the [TLDRThis](https://rapidapi.com/tldrthishq-tldrthishq-default/api/tldrthis) API and subscribe to it
+1. Copy your X-RapidAPI-key
+1. Copy the URL found in the **Code snippets** section (with the trailing slash)
 1. Fork the project to a new public repository
+1. Go to the forked repo's Settings page
+1. Go to **Secrets and Variables** >> **Actions**
+1. To the repository secrets add the `SUMMARISEAPI` secret
+1. Also add the `SUMMARISEAPIKEY` you copied at step (3)
 1. Ensure necessary Pull Request and Commit permissions are set up to allow for post approvals by the administrator and/or moderators
 1. Change the title at the top of this markdown file (`# Post Reader`)
 1. Change the two intro paragraphs at the top of this markdown file, to reflect the topic and purpose of your own website.
