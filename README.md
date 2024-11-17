@@ -68,9 +68,12 @@ To disable Github Pages deployments, delete the file `.github/workflows/npm-publ
 
 #### Via Terraform
 
-A sample set of terraform scripts can be found at the `/terraform` location. The sample terraform scripts are configured to deploy to AWS. Update and use as per your cloud provider and CI/CD framework accordingly.
+A sample set of terraform scripts can be found at the `/terraform` location. The sample ter## Things to do
 
-See other section below as well.
+- [ ] Better Youtube scraping
+- [ ] Process relative image url's correctly
+- [ ] Launch page on AI toggle
+- [ ] Persist toggle preference
 
 #### Other
 
@@ -109,3 +112,10 @@ Go to the [package.json](./package.json) file, line 13, and replace `/post-reade
 #### Github Pages (with custom domain) and others
 
 Depending on your hosting/website configuration, go to the [package.json](./package.json) file and update line 13 as required. Likely you have to remove the `--base-href` argument
+
+## Things to do
+
+- [ ] Better Youtube scraping
+- [ ] Process relative image url's correctly
+- [ ] Launch page on AI toggle
+- [ ] Persist toggle preference
