@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { LinkRegex, TitleRegex } from '../utilities';
+import { ImageRegex, LinkRegex, TitleRegex } from '../utilities';
 import { TldrDTO } from './models/tldr-dto';
 import { env } from 'process';
 const parseSrcset = require('parse-srcset');
@@ -114,6 +114,7 @@ function summarise(url: string) {
 
 function enrichWithScrapedData(markdown: string, document: HTMLElement) {
   const [, mdTitle] = TitleRegex.exec(markdown) ?? [null, null],
+    [, mdImage] = ImageRegex.exec(markdown) ?? [null, null],
     scrapedTitle = document.querySelector('h1')?.innerHTML ?? '',
     images = getImages(document);
 
@@ -126,7 +127,7 @@ function enrichWithScrapedData(markdown: string, document: HTMLElement) {
     }
   }
 
-  if (images.length > 0) {
+  if (!mdImage && images.length > 0) {
     const { src } = images[0] ?? { src: '' };
     markdown = addElement(markdown, 'Image', src);
   }
