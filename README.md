@@ -18,7 +18,7 @@ _Before submitting your first post, scroll down to the [Before making your first
 
 ### Adding your Content
 
-7. Optionally, insert a `Title` tag. _(A title will automatically be extracted from the original content if omitted)_
+5. Optionally, insert a `Title` tag. _(A title will automatically be extracted from the original content if omitted)_
 1. Insert one or more `Tags` tags, to ensure your content is categorised accordingly
 1. Most importantly, insert the hyperlink into the `Link` tag using the format in the example.
 1. Optionally, insert an `Image` tag. This will be used as a thumbnail on the website post feed. _(An image will automatically be extracted for use as a thumbnail, from the original content if omitted)_
@@ -41,7 +41,7 @@ _Example template_
 > **Please note**: certain websites prevents web scrapers from reading their content. In such situations metadata defined above might not be extractable. Websites known to prevent web scraping are listed in the **Websites known to prevent Web Scraping** section.
 
 ### Submitting your Post
-12. Use the **Commit** button to progress to the next step
+10. Use the **Commit** button to progress to the next step
 1. If prompted, optionally add a commit message
 1. From the two options presented, to commit directly or to create a Pull Request, select the **Pull Request** option
 1. Finally confirm your commit to submit your post
