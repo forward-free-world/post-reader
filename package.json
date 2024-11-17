@@ -29,7 +29,7 @@
     "fs": "^0.0.1-security",
     "fs-extra": "^11.2.0",
     "gh-pages": "^6.2.0",
-    "jsdom": "^24.1.0",
+    "jsdom": "^24.1.3",
     "lucide-angular": "^0.411.0",
     "parse-srcset": "^1.0.2",
     "rxjs": "~7.8.0",

@@ -9,9 +9,7 @@
 <div class="meta">
   @if(post.link) {
   <a [href]="post.link" target="_blank">{{ post.link }}</a>
-  }
-
-  @if(post.tags.length) {
+  } @if(post.tags.length) {
   <div class="tags">
     <span>Tags:&nbsp;</span> @for(tag of post.tags; track tag; let i = $index) { @if(i) {, }
     <span class="tag" (click)="tagSelected.emit(tag)">#{{ tag }}</span>
@@ -23,17 +21,24 @@
 <ng-container [ngSwitch]="content">
   @if(markdown) {
   <article *ngSwitchCase="'human'" [innerHTML]="markdown"></article>
-  <summary *ngSwitchCase="'machine'">{{ summary }}</summary>
+  <ng-container *ngSwitchCase="'machine'">
+    @if(summary) {
+    <summary>{{ summary }}</summary>
+    } @else {
+    <article [innerHTML]="markdown"></article>
+    <app-ai failed="true" />
+    }
+  </ng-container>
   <ng-container *ngSwitchCase="'both'">
     <article [innerHTML]="markdown"></article>
-    <app-ai>{{ summary }}</app-ai>
+    <app-ai [failed]="!summary">{{ summary }}</app-ai>
   </ng-container>
 
   } @else {
   <summary *ngSwitchCase="'machine'">{{ summary }}</summary>
   <ng-container *ngSwitchDefault>
     <article [innerHTML]="summary"></article>
-    <app-ai></app-ai>
+    <app-ai />
   </ng-container>
   }
 </ng-container>

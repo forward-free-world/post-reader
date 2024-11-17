@@ -39,7 +39,7 @@ _Example template_
 
 ## How to use this Github Repository to create your own Hyperlink Aggregator site
 
-### Select your deployment method
+### Select your hosting and deployment method
 
 #### Github Pages
 
@@ -71,9 +71,24 @@ When setting up your own build and continuous integration pipelines, please note
 1. Go to **Secrets and Variables** >> **Actions**
 1. To the repository secrets add the `SUMMARISEAPI` secret
 1. Also add the `SUMMARISEAPIKEY` you copied at step (3)
+1. Go to **Actions** >> **General** and enable Github Actions
+1. Go to **Pages** and for the **Build and deployment** >> **Source** setting, select **Github Actions**
 1. Ensure necessary Pull Request and Commit permissions are set up to allow for post approvals by the administrator and/or moderators
 1. Change the title at the top of this markdown file (`# Post Reader`)
 1. Change the two intro paragraphs at the top of this markdown file, to reflect the topic and purpose of your own website.
 1. In the file located at `src/app/app.config.ts` change the site title on **line 24**
 1. Remove the example posts in the `src/content` folder
+1. See **Base Path Management** below
 1. Submit and commit your first post
+
+### Base Path Management
+
+Due to this repository defaulting to Github Pages, there is a deployment step in the NPM tasks in the [package.json]('./package.json) file to include a base path in the build step. Depending on your hosting selection you will have to make one of the following changes
+
+#### Github Pages (without custom domain)
+
+Go to the [package.json](./package.json) file, line 13, and replace `/post-reader/` with the base path associated with your Github Pages page
+
+#### Github Pages (with custom domain) and others
+
+Depending on your hosting/website configuration, go to the [package.json](./package.json) file and update line 13 as required. Likely you have to remove the `--base-href` argument

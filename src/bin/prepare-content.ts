@@ -6,6 +6,7 @@ import { env } from 'process';
 const parseSrcset = require('parse-srcset');
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
+import { PrepareContentConfig } from './prepare-content-config';
 require('dotenv').config();
 
 // Function to read all MD files from a directory
@@ -24,7 +25,7 @@ async function readMdFilesFromDirectory(directoryPath: string): Promise<string[]
       }
 
       const [, link] = LinkRegex.exec(markdown) ?? [null, null];
-      if (link) {
+      if (link && PrepareContentConfig.blacklistScraping.every(blacklist => !link.includes(blacklist))) {
         const scraped = await fetch(link).then(response => response.text());
         const { document }: { document: HTMLElement } = new JSDOM(scraped).window;
 
@@ -118,7 +119,8 @@ function enrichWithScrapedData(markdown: string, document: HTMLElement) {
 
   if (scrapedTitle) {
     if (mdTitle) {
-      markdown = markdown.replace(mdTitle, scrapedTitle);
+      // Used to overwrite with scraped title. Caused issues with some scrapes
+      // markdown = markdown.replace(mdTitle, scrapedTitle);
     } else {
       markdown = addElement(markdown, 'Title', scrapedTitle);
     }
